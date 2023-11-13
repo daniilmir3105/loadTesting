@@ -10,19 +10,18 @@
 #include <bits/stdc++.h>
 #include <pthread.h>
 #include <signal.h>
+
 using namespace std;
 
 
 queue<int> q1;
 pthread_mutex_t lock_1=PTHREAD_MUTEX_INITIALIZER;
-//pthread_cond_t cond_full=PTHREAD_COND_INITIALIZER;
 pthread_cond_t cond_empty=PTHREAD_COND_INITIALIZER;
 
 socklen_t clilen;
 struct sockaddr_in serv_addr, cli_addr;
 void fun(int signum)
 {
-    //printf("i am in ctrl c  and flag value is=%d\n",flag);
     exit(0);
 
 }
@@ -34,18 +33,13 @@ void error(char *msg) {
 }
 void * master_thread(void * arg)
 {
-    //cout<<"i am in master thread\n";
     int my_arg = *((int *) arg);
     while(1)
     {
-        //cout<<*lock_1;
-        //cout<<"abhijeet sing mandal====$$$$$$$$$$$$$$$$$$4\n";
+
         int fd=accept(my_arg, (struct sockaddr *)&cli_addr, &clilen);
         pthread_mutex_lock(&lock_1);
-        //cout<<"*************aabhadijfja*******************\n";
-        //int fd=accept(my_arg, (struct sockaddr *)&cli_addr, &clilen);
         q1.push(fd);
-        //pthread_mutex_unlock(&lock_1);
         pthread_cond_signal(&cond_empty);
         pthread_mutex_unlock(&lock_1);
 
@@ -71,8 +65,6 @@ void * worker_thread_handler(void *arg)
         int x=q1.front();
 
         q1.pop();
-
-        //cout<<"AASJFAJFAJF////////********value of x before unlock="<<x<<endl;
 
         pthread_mutex_unlock(&lock_1);
 
@@ -187,9 +179,6 @@ int main(int argc, char *argv[]) {
 
     while(1)
     {
-
-
-
 
     }
 
